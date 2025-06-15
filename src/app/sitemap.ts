@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				}
 			});
 
-			productUrls = validProducts
+			const mappedProducts = validProducts
 				.map((product) => {
 					try {
 						return {
@@ -67,6 +67,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 					}
 				})
 				.filter((item): item is Item => item !== null);
+
+			productUrls = mappedProducts;
 		}
 		
 		console.log(`Successfully processed ${productUrls.length} products for sitemap`);
