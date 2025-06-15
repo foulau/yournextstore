@@ -33,25 +33,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		const products = await Commerce.productBrowse({ first: 100 });
 		
 		if (Array.isArray(products)) {
-			productUrls = products
-				.filter((product) => {
-					try {
-						// Validate each product thoroughly
-						return (
-							product &&
-							typeof product === 'object' &&
-							product.metadata &&
-							typeof product.metadata === 'object' &&
-							product.metadata.slug &&
-							typeof product.metadata.slug === 'string' &&
-							product.metadata.slug.trim() !== '' &&
-							typeof product.updated === 'number'
-						);
-					} catch (err) {
-						console.warn('Error validating product:', err);
-						return false;
-					}
-				})
+			const validProducts = products.filter((product) => {
+				try {
+					// Validate each product thoroughly
+					return (
+						product &&
+						typeof product === 'object' &&
+						product.metadata &&
+						typeof product.metadata === 'object' &&
+						product.metadata.slug &&
+						typeof product.metadata.slug === 'string' &&
+						product.metadata.slug.trim() !== '' &&
+						typeof product.updated === 'number'
+					);
+				} catch (err) {
+					console.warn('Error validating product:', err);
+					return false;
+				}
+			});
+
+			productUrls = validProducts
 				.map((product) => {
 					try {
 						return {
