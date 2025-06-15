@@ -3,8 +3,6 @@ import StoreConfig from "@/store.config";
 import * as Commerce from "commerce-kit";
 import type { MetadataRoute } from "next";
 
-type Item = MetadataRoute.Sitemap[number];
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	// Always include the base URL and categories
 	const baseUrls: MetadataRoute.Sitemap = [
