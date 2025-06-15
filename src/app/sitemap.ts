@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		{
 			url: publicUrl,
 			lastModified: new Date(),
-			changeFrequency: "always",
+			changeFrequency: "always" as const,
 			priority: 1,
 		},
 	];
@@ -22,12 +22,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		.map((category) => ({
 			url: `${publicUrl}/category/${category.slug}`,
 			lastModified: new Date(),
-			changeFrequency: "daily",
+			changeFrequency: "daily" as const,
 			priority: 0.5,
-		}) satisfies Item);
+		}));
 
 	// Try to get products, but handle any errors gracefully
-	let productUrls: Item[] = [];
+	let productUrls: MetadataRoute.Sitemap = [];
 	
 	try {
 		const products = await Commerce.productBrowse({ first: 100 });
@@ -58,15 +58,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 						return {
 							url: `${publicUrl}/product/${product.metadata.slug}`,
 							lastModified: new Date(product.updated * 1000),
-							changeFrequency: "daily",
+							changeFrequency: "daily" as const,
 							priority: 0.8,
-						} satisfies Item;
+						};
 					} catch (err) {
 						console.warn('Error mapping product to sitemap entry:', err);
 						return null;
 					}
 				})
-				.filter((item): item is Item => item !== null);
+				.filter((item): item is NonNullable<typeof item> => item !== null);
 
 			productUrls = mappedProducts;
 		}
